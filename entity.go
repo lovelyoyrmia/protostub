@@ -6,11 +6,21 @@ type ServiceStub struct {
 	// ServiceName is the name of the gRPC service.
 	ServiceName string
 
-	// Package is the name of protobuf package
-	Package string
+	// ProtoPackage is the name of protobuf package
+	//  // Example:
+	//  syntax = "proto3";
+	//  package pb;
+	ProtoPackage string
 
 	// GoPackage is the name of protobuf go package
+	//  // Example:
+	//  option go_package = "github.com/lovelyoyrmia/protostub/examples/pb";
 	GoPackage string
+
+	// Package is the name of generated go package
+	//  // Example:
+	//  package examples
+	Package string
 
 	// Method is the name of the method that the service provides.
 	Method string

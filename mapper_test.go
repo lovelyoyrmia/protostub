@@ -14,11 +14,11 @@ func TestConvertSnakeCase(t *testing.T) {
 	}{
 		{
 			req:      "UserService",
-			expected: "user_service_impl.go",
+			expected: "user_service",
 		},
 		{
 			req:      "userService",
-			expected: "user_service_impl.go",
+			expected: "user_service",
 		},
 	}
 

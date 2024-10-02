@@ -7,21 +7,21 @@ package {{ .Package }}
 import (
 	"context"
 	"log"
-	{{ .Package }} "{{ .GoPackage }}"
+	{{ .ProtoPackage }} "{{ .GoPackage }}"
 )
 
 // {{ .ServiceName }}Impl implements the gRPC service for {{ .ServiceName }}Impl.
 // This is the server struct that will be used to implement the service methods.
 type {{ .ServiceName }}Impl struct {
-	{{ .Package }}.Unimplemented{{ .ServiceName }}Server
+	{{ .ProtoPackage }}.Unimplemented{{ .ServiceName }}Server
 }
 
 // {{ .Method }} handles requests for the {{ .Method }} method.
 // It takes a {{ .InputType }} request and returns a {{ .OutputType }} response.
-func (s *{{ .ServiceName }}Impl) {{ .Method }}(ctx context.Context, req *{{ .Package }}.{{ .InputType }}) (*{{ .Package }}.{{ .OutputType }}, error) {
+func (s *{{ .ServiceName }}Impl) {{ .Method }}(ctx context.Context, req *{{ .ProtoPackage }}.{{ .InputType }}) (*{{ .ProtoPackage }}.{{ .OutputType }}, error) {
 	// TODO: Implement your logic here
 	log.Println("Received request:", req)
-	return &{{ .Package }}.{{ .OutputType }}{}, nil
+	return &{{ .ProtoPackage }}.{{ .OutputType }}{}, nil
 }
 
 // New{{ .ServiceName }}Server returns a new instance of {{ .ServiceName }}Impl.

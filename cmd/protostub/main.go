@@ -19,6 +19,8 @@ func main() {
 		protostub.WithProtoDir(flags.protoDir),
 		protostub.WithDestDir(flags.destDir),
 		protostub.WithServiceDir(flags.serviceDir),
+		protostub.WithClientDir(flags.clientDir),
+		protostub.WithType(flags.typeName),
 	)
 
 	if err := ps.Generate(); err != nil {
@@ -51,6 +53,7 @@ func (f *Flags) handleFlags() bool {
 	if !f.CheckRequiredArgs(map[string]string{
 		"proto_dir":   f.protoDir,
 		"service_dir": f.serviceDir,
+		"client_dir":  f.clientDir,
 	}) {
 		f.PrintError()
 		return true
