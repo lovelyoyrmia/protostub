@@ -6,7 +6,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/lovelyoyrmia/protodoc"
+	"github.com/lovelyoyrmia/protostub"
 )
 
 const helpMessage = `
@@ -20,7 +20,7 @@ See https://github.com/lovelyoyrmia/protostub for more details.
 
 // Version returns the currently running version of protodoc
 func Version() string {
-	return protodoc.VERSION
+	return protostub.VERSION
 }
 
 // Flags contains details about the CLI invocation of protodoc
