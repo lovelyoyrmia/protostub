@@ -1,4 +1,4 @@
 package protostub
 
 // VERSION is the version of protostub being used.
-const VERSION = "v1.0.0"
+const VERSION = "v2.0.0"
