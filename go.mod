@@ -2,10 +2,8 @@ module github.com/lovelyoyrmia/protostub
 
 go 1.22.5
 
-replace github.com/lovelyoyrmia/protodoc => ../protobuf-documentation
-
 require (
-	github.com/lovelyoyrmia/protodoc v1.2.1-dev.1
+	github.com/lovelyoyrmia/protodoc v1.2.2
 	github.com/stretchr/testify v1.9.0
 	google.golang.org/grpc v1.67.1
 	google.golang.org/protobuf v1.34.2

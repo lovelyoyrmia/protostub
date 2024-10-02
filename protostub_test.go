@@ -16,7 +16,7 @@ func TestGenerate(t *testing.T) {
 			name: "SUCCESS",
 			pbStub: &ProtoStub{
 				ProtoDir:   "./examples",
-				DestDir:    "./examples",
+				DestDir:    "./examples/pb",
 				ServiceDir: "./examples/service",
 			},
 			checkResponse: func(t *testing.T, err error) {
@@ -54,7 +54,7 @@ func TestGenerateServices(t *testing.T) {
 			name: "SUCCESS",
 			pbStub: &ProtoStub{
 				ProtoDir:   "./examples",
-				DestDir:    "./examples",
+				DestDir:    "./examples/pb",
 				ServiceDir: "./examples/services",
 			},
 			checkResponse: func(t *testing.T, err error, services []*ServiceStub) {
