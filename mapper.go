@@ -15,5 +15,5 @@ func toSnakeCase(str string) string {
 			result = append(result, r)
 		}
 	}
-	return string(result) + "_impl.go"
+	return string(result)
 }

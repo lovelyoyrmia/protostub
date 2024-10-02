@@ -1,14 +1,8 @@
 package protostub
 
 import (
-	"bytes"
-	"encoding/json"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"strings"
-
-	"github.com/lovelyoyrmia/protodoc"
 )
 
 // ProtoStub represents the necessary information for handling
@@ -24,6 +18,12 @@ type ProtoStub struct {
 
 	// ServiceDir is the directory where the generated service stub will be placed.
 	ServiceDir string
+
+	// ClientDir is the directory where the generated client stub will be placed.
+	ClientDir string
+
+	// TypeName is the type of stub that will be generated (client or server)
+	TypeName ProtoStubType
 }
 
 func New(opts ...Option) *ProtoStub {
@@ -40,20 +40,27 @@ func New(opts ...Option) *ProtoStub {
 }
 
 // Generate generates additional server scaffolding code.
-func (ps *ProtoStub) Generate() error {
-	services, err := ps.GenerateServices()
+func (s *ProtoStub) Generate() error {
+	services, err := s.GenerateServices()
 	if err != nil {
 		return err
 	}
 
 	for _, service := range services {
-		data, err := RenderTemplate(service)
+		data, err := RenderTemplate(s.TypeName, service)
 		if err != nil {
 			return err
 		}
 
-		fileName := toSnakeCase(service.ServiceName)
-		serverFile := filepath.Join(ps.ServiceDir, fileName)
+		fileName := toSnakeCase(service.ServiceName) + s.TypeName.extractExtension()
+
+		var serverFile string
+		switch s.TypeName {
+		case ProtostubClientType:
+			serverFile = filepath.Join(s.ClientDir, fileName)
+		case ProtostubServerType:
+			serverFile = filepath.Join(s.ServiceDir, fileName)
+		}
 
 		f, err := os.Create(serverFile)
 		if err != nil {
@@ -64,103 +71,6 @@ func (ps *ProtoStub) Generate() error {
 		if _, err := f.Write(data); err != nil {
 			return err
 		}
-	}
-
-	return nil
-}
-
-// GenerateServices function to generate all protofiles and convert to `FileDescriptorProto`
-// and mapping to service stub.
-func (ps *ProtoStub) GenerateServices() ([]*ServiceStub, error) {
-	if err := ps.generateProtoFiles(); err != nil {
-		return nil, err
-	}
-
-	fileDesc, err := protodoc.GenerateDescriptor(protodoc.DefaultDescriptorFile)
-	if err != nil {
-		return nil, err
-	}
-
-	pbDoc := protodoc.New(
-		protodoc.WithFileDescriptor(fileDesc),
-		protodoc.WithType(protodoc.ProtodocTypeJson),
-	)
-
-	res, err := pbDoc.Generate()
-	if err != nil {
-		return nil, err
-	}
-
-	var apiDoc protodoc.APIDoc
-	if err := json.Unmarshal(res, &apiDoc); err != nil {
-		return nil, err
-	}
-
-	services := make([]*ServiceStub, 0)
-
-	if apiDoc.Services != nil {
-		for _, service := range apiDoc.Services {
-			serviceStub := &ServiceStub{
-				GoPackage:   apiDoc.GoPackage,
-				Package:     apiDoc.Package,
-				ServiceName: service.Name,
-				Method:      service.Methods[0].Name,
-				InputType:   strings.TrimPrefix(service.Methods[0].InputType, "#"),
-				OutputType:  strings.TrimPrefix(service.Methods[0].OutputType, "#"),
-			}
-
-			services = append(services, serviceStub)
-		}
-	}
-
-	return services, nil
-}
-
-func (ps *ProtoStub) getAllProtoFiles() ([]string, error) {
-	var protoFiles []string
-
-	files, err := os.ReadDir(ps.ProtoDir)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, file := range files {
-		if filepath.Ext(file.Name()) == ".proto" {
-			protoFiles = append(protoFiles, filepath.Join(ps.ProtoDir, file.Name()))
-		}
-	}
-
-	return protoFiles, nil
-}
-
-func (ps *ProtoStub) generateProtoFiles() error {
-	// Gather all .proto files
-	protoFiles, err := ps.getAllProtoFiles()
-	if err != nil {
-		return err
-	}
-
-	// Prepare the protoc command with all proto files
-	cmdArgs := append([]string{
-		"--proto_path=" + ps.ProtoDir,
-		"--descriptor_set_out=" + protodoc.DefaultDescriptorFile,
-		"--go_out=" + ps.DestDir,
-		"--go_opt=paths=source_relative",
-		"--go-grpc_opt=paths=source_relative",
-		"--go-grpc_out=" + ps.DestDir,
-	}, protoFiles...)
-
-	// Exec command protoc to generate descriptor file
-	cmd := exec.Command("protoc", cmdArgs...)
-
-	// Capture output and error
-	var out, stderr bytes.Buffer
-	cmd.Stdout = &out
-	cmd.Stderr = &stderr
-
-	// Run the command
-	if err := cmd.Run(); err != nil {
-		return err
 	}
 
 	return nil

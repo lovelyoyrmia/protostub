@@ -6,7 +6,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/lovelyoyrmia/protodoc"
+	"github.com/lovelyoyrmia/protostub"
 )
 
 const helpMessage = `
@@ -20,7 +20,7 @@ See https://github.com/lovelyoyrmia/protostub for more details.
 
 // Version returns the currently running version of protodoc
 func Version() string {
-	return protodoc.VERSION
+	return protostub.VERSION
 }
 
 // Flags contains details about the CLI invocation of protodoc
@@ -33,6 +33,9 @@ type Flags struct {
 	protoDir    string
 	destDir     string
 	serviceDir  string
+	clientDir   string
+	typeString  string
+	typeName    protostub.ProtoStubType
 	writer      io.Writer
 }
 
@@ -59,9 +62,29 @@ func (f *Flags) ShowVersion() bool {
 func (f *Flags) CheckRequiredArgs(fields map[string]string) bool {
 	var missingFields []string
 	for fieldName, fieldValue := range fields {
-		if fieldValue == "" {
+		if f.typeString == "" && fieldValue == "" {
+			missingFields = append(missingFields, "type", fieldName)
+		}
+
+		tName, err := protostub.RenderType(f.typeString)
+		if err != nil {
+			f.err = err
+			return false
+		}
+
+		if tName == protostub.ProtostubServerType &&
+			fieldName == "service_dir" &&
+			fieldValue == "" {
 			missingFields = append(missingFields, fieldName)
 		}
+
+		if tName == protostub.ProtostubClientType &&
+			fieldName == "client_dir" &&
+			fieldValue == "" {
+			missingFields = append(missingFields, fieldName)
+		}
+
+		f.typeName = tName
 	}
 	if len(missingFields) > 0 {
 		f.err = fmt.Errorf("error: The following fields must not be empty: %s", strings.Join(missingFields, ", "))
@@ -88,7 +111,7 @@ func (f *Flags) PrintError() {
 	if f.err == nil {
 		return
 	}
-	fmt.Println(f.err)
+	fmt.Printf("failed to run command, err=%v\n", f.err)
 	fmt.Println("Use --help or -h for usage information.")
 }
 
@@ -99,7 +122,9 @@ func ParseFlags(w io.Writer, args []string) *Flags {
 	f.flagSet = flag.NewFlagSet(args[0], flag.ContinueOnError)
 	f.flagSet.StringVar(&f.protoDir, "proto_dir", "", "proto_dir is the directory of the all protobuf files.")
 	f.flagSet.StringVar(&f.destDir, "dest_dir", ".", "dest_dir is the output directory of the go and grpc services.")
-	f.flagSet.StringVar(&f.serviceDir, "service_dir", ".", "service_dir is the output directory of the services stub.")
+	f.flagSet.StringVar(&f.typeString, "type", "", "type is the type of generated file (server or client)")
+	f.flagSet.StringVar(&f.serviceDir, "service_dir", "", "service_dir is the output directory of the services stub.")
+	f.flagSet.StringVar(&f.clientDir, "client_dir", "", "client_dir is the output directory of the clients stub.")
 
 	f.flagSet.BoolVar(&f.showHelp, "help", false, "Show this help message")
 	f.flagSet.BoolVar(&f.showVersion, "version", false, fmt.Sprintf("Print the current version (%v)", Version()))
