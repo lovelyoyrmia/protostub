@@ -10,10 +10,20 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+// UserServiceClient implements the gRPC client for UserService.
+// It holds the gRPC client that will be used to make remote procedure calls to the UserService.
 type UserServiceClient struct {
 	Client pb.UserServiceClient
 }
 
+// InitUserServiceClient initializes a new gRPC client for UserService.
+// It takes a server URL as input, sets up a gRPC connection, and returns the initialized client.
+//
+// url: The address of the gRPC server to connect to.
+//
+// Returns:
+// - A pointer to the initialized UserServiceClient.
+// - An error if the connection setup fails.
 func InitUserServiceClient(url string) (*UserServiceClient, error) {
 	cc, err := grpc.NewClient(url, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
