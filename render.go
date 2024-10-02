@@ -6,11 +6,21 @@ import (
 	text_template "text/template"
 )
 
-//go:embed resources/service.tmpl
-var serviceTmpl []byte
+var (
+	//go:embed resources/service.tmpl
+	serviceTmpl []byte
 
-func RenderTemplate(serviceStub *ServiceStub) ([]byte, error) {
-	tmpl, err := text_template.New("Text Template").Parse(string(serviceTmpl))
+	//go:embed resources/client.tmpl
+	clientTmpl []byte
+)
+
+func RenderTemplate(kind ProtoStubType, serviceStub *ServiceStub) ([]byte, error) {
+	templString, err := kind.renderer()
+	if err != nil {
+		return nil, err
+	}
+
+	tmpl, err := text_template.New("Text Template").Parse(templString)
 	if err != nil {
 		return nil, err
 	}

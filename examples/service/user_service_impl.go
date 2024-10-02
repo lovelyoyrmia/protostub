@@ -2,7 +2,7 @@
 // see more examples: https://github.com/lovelyoyrmia/protostub
 // Implement your logic below
 
-package pb
+package service
 
 import (
 	"context"

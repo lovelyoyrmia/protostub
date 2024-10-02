@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/lovelyoyrmia/protodoc"
 	"github.com/lovelyoyrmia/protostub"
 )
 
@@ -22,11 +20,6 @@ func main() {
 
 	if err := ps.Generate(); err != nil {
 		fmt.Printf("failed to generate service stub, err=%v\n", err)
-		return
-	}
-
-	if err := os.Remove(protodoc.DefaultDescriptorFile); err != nil {
-		fmt.Printf("failed to execute, err=%v\n", err)
 		return
 	}
 }
