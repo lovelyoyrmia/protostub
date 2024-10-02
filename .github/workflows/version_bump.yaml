@@ -1,0 +1,59 @@
+name: Bump Version
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  bump_version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.5'
+      - run: go version
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14.15.0'
+      - run: npm install -g standard-version
+
+      - name: Install Git
+        run: sudo apt-get install git
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "lovelyoyrmia"
+          git config --global user.email "mokalulovelyo@gmail.com"
+
+      - name: Bump version
+        run: python bump_version_v2.py patch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          # either 'goreleaser' (default) or 'goreleaser-pro'
+          distribution: goreleaser
+          # 'latest', 'nightly', or a semver
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          CREATE_CHANGELOG: ${{ secrets.CREATE_CHANGELOG }}
