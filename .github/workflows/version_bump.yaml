@@ -24,6 +24,7 @@ jobs:
       - run: go install github.com/golang/protobuf/protoc-gen-go@latest && go test -v -cover ./...
 
   bump_version:
+    needs: tests
     runs-on: ubuntu-latest
 
     steps:
