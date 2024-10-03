@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/lovelyoyrmia/protostub/compare/v1.0.0...v1.0.1) (2024-10-03)
+
+
+### Features
+
+* add client type and template client ([e5c9703](https://github.com/lovelyoyrmia/protostub/commit/e5c9703b7c4c28ff49632f997037cb67ef639384))
+
 ## [2.0.0](https://github.com/lovelyoyrmia/protostub/compare/v1.0.0...v2.0.0) (2024-10-02)
 
 
