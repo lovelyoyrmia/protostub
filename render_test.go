@@ -9,10 +9,10 @@ import (
 func TestRenderTemplate(t *testing.T) {
 
 	testCases := []struct {
-		name          string
-		typeName      ProtoStubType
 		stub          *ServiceStub
 		checkResponse func(t *testing.T, err error, data []byte)
+		name          string
+		typeName      ProtoStubType
 	}{
 		{
 			name:     "SUCCESS_SERVER",

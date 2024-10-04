@@ -8,9 +8,9 @@ import (
 
 func TestGenerate(t *testing.T) {
 	testCases := []struct {
-		name          string
 		pbStub        *ProtoStub
 		checkResponse func(t *testing.T, err error)
+		name          string
 	}{
 		{
 			name: "SUCCESS_SERVER",
@@ -63,9 +63,9 @@ func TestGenerate(t *testing.T) {
 
 func TestGenerateServices(t *testing.T) {
 	testCases := []struct {
-		name          string
 		pbStub        *ProtoStub
 		checkResponse func(t *testing.T, err error, services []*ServiceStub)
+		name          string
 	}{
 		{
 			name: "SUCCESS",
