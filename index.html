@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Protostub: A Go library for gRPC client and server stub generation"
+    />
+
+    <title>Protostub Documentation</title>
+
+    <!-- External Stylesheets -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Internal Styles -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+
+        background-color: #f9f9f9;
+        color: #333;
+      }
+
+      header {
+        background-color: #282c34;
+        color: #ffffff;
+        padding: 20px;
+        text-align: center;
+
+        font-size: 1.5em;
+      }
+
+      nav {
+        background-color: #4caf50;
+
+        padding: 10px;
+        text-align: center;
+      }
+
+      nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      nav ul li {
+        display: inline;
+        margin-right: 15px;
+      }
+
+      nav ul li a {
+        color: white;
+
+        text-decoration: none;
+        font-size: 1.2em;
+      }
+
+      nav ul li a:hover {
+        text-decoration: underline;
+      }
+
+      main {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      section {
+        margin-bottom: 40px;
+      }
+
+      h2 {
+        color: #4caf50;
+      }
+
+      pre {
+        background-color: #f4f4f4;
+        padding: 15px;
+        border-radius: 5px;
+        overflow: auto;
+      }
+
+      footer {
+        background-color: #282c34;
+        color: white;
+
+        text-align: center;
+        padding: 10px 0;
+        position: relative;
+        bottom: 0;
+
+        width: 100%;
+      }
+
+      /* Collapsible Section Styles */
+      .collapsible {
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+
+        border: none;
+        border-radius: 10px;
+        text-align: left;
+        font-size: 1.2em;
+        margin-top: 15px;
+
+        width: 100%;
+        outline: none;
+      }
+
+      .content {
+        display: none;
+        overflow: hidden;
+
+        padding: 0 18px;
+
+        background-color: #f9f9f9;
+      }
+
+      /* Syntax highlighting using Prism */
+      code[class*="language-"],
+      pre[class*="language-"] {
+        color: black; /* Override default Prism.js styling */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>Protostub Documentation</header>
+
+    <!-- Navigation -->
+    <nav>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#examples">Examples</a></li>
+
+        <li><a href="#license">License</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Features Section -->
+      <section id="features">
+        <h2>Features</h2>
+        <ul>
+          <li>
+            Generate client and server code for gRPC services based on `.proto`
+            files.
+          </li>
+
+          <li>
+            Easy-to-configure options for specifying source and destination
+            directories.
+          </li>
+          <li>
+            Command-Line Interface (CLI) for quick generation without needing to
+            write Go code.
+          </li>
+          <li>Streamlines the setup of gRPC services in Go.</li>
+        </ul>
+      </section>
+
+      <!-- Installation Section -->
+
+      <section id="installation">
+        <h2>Installation</h2>
+
+        <button class="collapsible">For Library Purposes</button>
+        <div class="content">
+          <pre><code class="language-bash">go get github.com/lovelyoyrmia/protostub</code></pre>
+        </div>
+
+        <button class="collapsible">For CLI Purposes</button>
+        <div class="content">
+          <pre><code class="language-bash">go install github.com/lovelyoyrmia/protostub/cmd/protostub@latest</code></pre>
+        </div>
+      </section>
+
+      <!-- Usage Section -->
+      <section id="usage">
+        <h2>Usage</h2>
+
+        <button class="collapsible">CLI Usage</button>
+        <div class="content">
+          <p>Generate Server Command:</p>
+
+          <pre><code class="language-bash">protostub --proto_dir=./proto --dest_dir=./pb --service_dir=./services --type=server</code></pre>
+
+          <p>Generate Client Command:</p>
+          <pre><code class="language-bash">protostub --proto_dir=./proto --dest_dir=./pb --client_dir=./services --type=client</code></pre>
+        </div>
+
+        <button class="collapsible">Library Usage</button>
+        <div class="content">
+          <pre><code class="language-go">package main
+
+import (
+    "github.com/lovelyoyrmia/protostub"
+    "log"
+
+)
+
+
+func main() {
+    stub := protostub.New(
+        protostub.WithProtoDir("./proto"),
+        protostub.WithDestDir("./generated"),
+        protostub.WithServiceDir("./service"),
+        protostub.WithClientDir("./client"),
+        protostub.WithType(protostub.ProtostubClientType),
+
+    )
+
+    err := stub.Generate()
+    if err != nil {
+        log.Fatalf("failed to generate stubs: %v", err)
+    }
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- Examples Section -->
+      <section id="examples">
+        <h2>Examples</h2>
+
+        <button class="collapsible">Example `.proto` file</button>
+        <div class="content">
+          <pre><code class="language-protobuf">syntax = "proto3";
+package pb;
+
+
+option go_package = "github.com/lovelyoyrmia/protostub/examples/pb";
+
+message User {
+
+    string name = 1;
+    string email = 2;
+    int32 age = 3;
+}
+
+message GetUserRequest {
+    int32 id = 1;
+}
+
+message GetUserResponse {
+    User user = 1;
+}
+
+service UserService {
+
+    rpc GetUser(GetUserRequest) returns (GetUserResponse);
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- License Section -->
+
+      <section id="license">
+        <h2>License</h2>
+        <p><a href="LICENSE">GNU GENERAL PUBLIC LICENSE</a></p>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>&copy; 2024 lovelyoyrmia</footer>
+
+    <!-- External Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+
+    <script>
+      // Collapsible sections functionality
+      const collapsibles = document.querySelectorAll(".collapsible");
+      collapsibles.forEach((item) => {
+        item.addEventListener("click", function () {
+          this.classList.toggle("active");
+          const content = this.nextElementSibling;
+          if (content.style.display === "block") {
+            content.style.display = "none";
+          } else {
+            content.style.display = "block";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

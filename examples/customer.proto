@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/lovelyoyrmia/protostub/examples/pb";
+
+message Customer {
+    string name = 1;
+    string email = 2;
+    int32 age = 3;
+}
+
+message GetCustomerRequest {
+    int32 id = 1;
+}
+
+message GetCustomerResponse {
+    repeated Customer user = 1;
+}
+
+service CustomerService {
+    rpc GetCustomer(GetCustomerRequest) returns (GetCustomerResponse);
+}
