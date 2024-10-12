@@ -7,6 +7,7 @@ package service
 import (
 	"context"
 	"log"
+
 	pb "github.com/lovelyoyrmia/protostub/examples/pb"
 )
 
@@ -19,6 +20,16 @@ type UserServiceImpl struct {
 // GetUser handles requests for the GetUser method.
 // It takes a GetUserRequest request and returns a GetUserResponse response.
 func (s *UserServiceImpl) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+	// TODO: Implement your logic here
+	// asdasdaa
+	// asfsfa
+	log.Println("Received request:", req)
+	return &pb.GetUserResponse{}, nil
+}
+
+// DeleteUser handles requests for the DeleteUser method.
+// It takes a GetUserRequest request and returns a GetUserResponse response.
+func (s *UserServiceImpl) DeleteUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	// TODO: Implement your logic here
 	log.Println("Received request:", req)
 	return &pb.GetUserResponse{}, nil

@@ -7,7 +7,6 @@ import (
 )
 
 func TestRenderTemplate(t *testing.T) {
-
 	testCases := []struct {
 		stub          *ServiceStub
 		checkResponse func(t *testing.T, err error, data []byte)
@@ -21,9 +20,13 @@ func TestRenderTemplate(t *testing.T) {
 				ServiceName: "UserService",
 				Package:     "pb",
 				GoPackage:   "github.com/lovelyoyrmia/protostub/examples/pb",
-				Method:      "GetUser",
-				InputType:   "GetUserRequest",
-				OutputType:  "GetUserResponse",
+				Methods: []Method{
+					{
+						Method:     "GetUser",
+						InputType:  "GetUserRequest",
+						OutputType: "GetUserResponse",
+					},
+				},
 			},
 			checkResponse: func(t *testing.T, err error, data []byte) {
 				require.NoError(t, err)
@@ -37,9 +40,13 @@ func TestRenderTemplate(t *testing.T) {
 				ServiceName: "UserService",
 				Package:     "pb",
 				GoPackage:   "github.com/lovelyoyrmia/protostub/examples/pb",
-				Method:      "GetUser",
-				InputType:   "GetUserRequest",
-				OutputType:  "GetUserResponse",
+				Methods: []Method{
+					{
+						Method:     "GetUser",
+						InputType:  "GetUserRequest",
+						OutputType: "GetUserResponse",
+					},
+				},
 			},
 			checkResponse: func(t *testing.T, err error, data []byte) {
 				require.NoError(t, err)

@@ -7,6 +7,7 @@ package service
 import (
 	"context"
 	"log"
+
 	pb "github.com/lovelyoyrmia/protostub/examples/pb"
 )
 

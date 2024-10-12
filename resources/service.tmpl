@@ -16,6 +16,7 @@ type {{ .ServiceName }}Impl struct {
 	{{ .ProtoPackage }}.Unimplemented{{ .ServiceName }}Server
 }
 
+{{range .Methods}}
 // {{ .Method }} handles requests for the {{ .Method }} method.
 // It takes a {{ .InputType }} request and returns a {{ .OutputType }} response.
 func (s *{{ .ServiceName }}Impl) {{ .Method }}(ctx context.Context, req *{{ .ProtoPackage }}.{{ .InputType }}) (*{{ .ProtoPackage }}.{{ .OutputType }}, error) {
@@ -23,6 +24,7 @@ func (s *{{ .ServiceName }}Impl) {{ .Method }}(ctx context.Context, req *{{ .Pro
 	log.Println("Received request:", req)
 	return &{{ .ProtoPackage }}.{{ .OutputType }}{}, nil
 }
+{{end}}
 
 // New{{ .ServiceName }}Server returns a new instance of {{ .ServiceName }}Impl.
 // This is used to initialize the gRPC server with the service implementation.

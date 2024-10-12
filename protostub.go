@@ -47,22 +47,22 @@ func (s *ProtoStub) Generate() error {
 	}
 
 	for _, service := range services {
+		fileName := toSnakeCase(service.ServiceName) + s.TypeName.extractExtension()
+
+		var filePath string
+		switch s.TypeName {
+		case ProtostubClientType:
+			filePath = filepath.Join(s.ClientDir, fileName)
+		case ProtostubServerType:
+			filePath = filepath.Join(s.ServiceDir, fileName)
+		}
+
 		data, err := RenderTemplate(s.TypeName, service)
 		if err != nil {
 			return err
 		}
 
-		fileName := toSnakeCase(service.ServiceName) + s.TypeName.extractExtension()
-
-		var serverFile string
-		switch s.TypeName {
-		case ProtostubClientType:
-			serverFile = filepath.Join(s.ClientDir, fileName)
-		case ProtostubServerType:
-			serverFile = filepath.Join(s.ServiceDir, fileName)
-		}
-
-		f, err := os.Create(serverFile)
+		f, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
 			return err
 		}

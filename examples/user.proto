@@ -22,4 +22,6 @@ message GetUserResponse {
 
 service UserService {
     rpc GetUser(GetUserRequest) returns (GetUserResponse);
+
+    rpc DeleteUser(GetUserRequest) returns (GetUserResponse);
 }

@@ -22,6 +22,20 @@ type ServiceStub struct {
 	//  package examples
 	Package string
 
+	// Methods is a list of methods from the service
+	Methods []Method
+}
+
+type Method struct {
+	// ServiceName is the name of the gRPC service.
+	ServiceName string
+
+	// ProtoPackage is the name of protobuf package
+	//  // Example:
+	//  syntax = "proto3";
+	//  package pb;
+	ProtoPackage string
+
 	// Method is the name of the method that the service provides.
 	Method string
 

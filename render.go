@@ -20,7 +20,7 @@ func RenderTemplate(kind ProtoStubType, serviceStub *ServiceStub) ([]byte, error
 		return nil, err
 	}
 
-	tmpl, err := text_template.New("Text Template").Parse(templString)
+	tmpl, err := text_template.New(kind.String()).Parse(templString)
 	if err != nil {
 		return nil, err
 	}
