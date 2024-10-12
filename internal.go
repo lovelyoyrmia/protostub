@@ -1,11 +1,13 @@
 package protostub
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/lovelyoyrmia/protodoc"
@@ -51,14 +53,24 @@ func (ps *ProtoStub) GenerateServices() ([]*ServiceStub, error) {
 
 	if apiDoc.Services != nil {
 		for _, service := range apiDoc.Services {
+			methods := make([]Method, 0)
+
+			for _, method := range service.Methods {
+				methods = append(methods, Method{
+					ServiceName:  service.Name,
+					Method:       method.Name,
+					InputType:    strings.Trim(method.InputType, "#"),
+					OutputType:   strings.Trim(method.OutputType, "#"),
+					ProtoPackage: apiDoc.Package,
+				})
+			}
+
 			serviceStub := &ServiceStub{
 				Package:      packageName,
 				GoPackage:    apiDoc.GoPackage,
 				ProtoPackage: apiDoc.Package,
 				ServiceName:  service.Name,
-				Method:       service.Methods[0].Name,
-				InputType:    strings.TrimPrefix(service.Methods[0].InputType, "#"),
-				OutputType:   strings.TrimPrefix(service.Methods[0].OutputType, "#"),
+				Methods:      methods,
 			}
 
 			services = append(services, serviceStub)
@@ -116,4 +128,32 @@ func (ps *ProtoStub) generateProtoFiles() error {
 	}
 
 	return nil
+}
+
+// Function to extract existing method names from the file (ignoring the body).
+func (ps *ProtoStub) extractMethodSignatures(filePath string) (map[string]bool, error) {
+	existingMethods := make(map[string]bool)
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	// Define a regex to match method signatures, e.g., `func (s *ServiceImpl) MethodName`
+	methodRegex := regexp.MustCompile(`func \(s \*([a-zA-Z]+)\) ([a-zA-Z]+)\(`)
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		match := methodRegex.FindStringSubmatch(line)
+		if len(match) > 2 {
+			existingMethods[match[2]] = true
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return existingMethods, nil
 }
